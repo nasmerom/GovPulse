@@ -1,0 +1,86 @@
+{
+  "name": "PoliticalEvent",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Event title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "legislation",
+        "election",
+        "debate",
+        "announcement",
+        "scandal",
+        "economic",
+        "international",
+        "judicial"
+      ],
+      "description": "Type of political event"
+    },
+    "impact_level": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "description": "Importance level"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Event date"
+    },
+    "location": {
+      "type": "string",
+      "description": "Event location"
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Key participants involved"
+    },
+    "market_impact": {
+      "type": "number",
+      "description": "Market impact score (-100 to 100)"
+    },
+    "sentiment": {
+      "type": "string",
+      "enum": [
+        "very_negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very_positive"
+      ],
+      "description": "Overall sentiment"
+    },
+    "source_url": {
+      "type": "string",
+      "description": "Source URL"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Event tags"
+    }
+  },
+  "required": [
+    "title",
+    "event_type",
+    "impact_level",
+    "date"
+  ]
+} 

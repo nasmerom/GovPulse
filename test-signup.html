@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Signup Flow</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+        button { margin: 5px; padding: 10px; }
+        .log { background: #f0f0f0; padding: 10px; margin: 10px 0; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h1>Signup Flow Test</h1>
+    
+    <div class="test-section">
+        <h3>Step 1: Clear localStorage</h3>
+        <button onclick="clearStorage()">Clear localStorage</button>
+        <button onclick="showStorage()">Show localStorage</button>
+    </div>
+    
+    <div class="test-section">
+        <h3>Step 2: Test User.me()</h3>
+        <button onclick="testUserMe()">Test User.me()</button>
+    </div>
+    
+    <div class="test-section">
+        <h3>Step 3: Test isOnboardingCompleted</h3>
+        <button onclick="testOnboarding()">Test isOnboardingCompleted</button>
+    </div>
+    
+    <div class="test-section">
+        <h3>Step 4: Create Test User</h3>
+        <button onclick="createTestUser()">Create Test User</button>
+    </div>
+    
+    <div class="test-section">
+        <h3>Step 5: Open Signup Page</h3>
+        <button onclick="openSignup()">Open Signup Page</button>
+    </div>
+    
+    <div class="log" id="log"></div>
+    
+    <script>
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            logDiv.innerHTML += new Date().toLocaleTimeString() + ': ' + message + '<br>';
+            console.log(message);
+        }
+        
+        function clearStorage() {
+            localStorage.clear();
+            log('localStorage cleared');
+        }
+        
+        function showStorage() {
+            const userData = localStorage.getItem('govpulse_user');
+            const sessionData = localStorage.getItem('govpulse_session');
+            log('User data: ' + userData);
+            log('Session data: ' + sessionData);
+        }
+        
+        function testUserMe() {
+            // Simulate what User.me() would return
+            const userData = localStorage.getItem('govpulse_user');
+            if (userData) {
+                const user = JSON.parse(userData);
+                log('User.me() returns: ' + JSON.stringify(user, null, 2));
+            } else {
+                log('User.me() returns default user (no localStorage data)');
+            }
+        }
+        
+        function testOnboarding() {
+            const userData = localStorage.getItem('govpulse_user');
+            if (userData) {
+                const user = JSON.parse(userData);
+                log('isOnboardingCompleted: ' + (user.onboarding_completed || false));
+            } else {
+                log('isOnboardingCompleted: false (no user in localStorage)');
+            }
+        }
+        
+        function createTestUser() {
+            const testUser = {
+                id: 123,
+                name: 'Test User',
+                email: 'test@example.com',
+                account_type: 'Citizen',
+                onboarding_completed: false,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            };
+            
+            localStorage.setItem('govpulse_user', JSON.stringify(testUser));
+            localStorage.setItem('govpulse_session', JSON.stringify({
+                isAuthenticated: true,
+                lastActivity: new Date().toISOString()
+            }));
+            
+            log('Created test user: ' + JSON.stringify(testUser, null, 2));
+        }
+        
+        function openSignup() {
+            window.open('http://localhost:3002/signup', '_blank');
+        }
+        
+        // Initialize
+        log('Test page loaded');
+        showStorage();
+    </script>
+</body>
+</html> 

@@ -1,0 +1,136 @@
+{
+  "name": "Politician",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Full name"
+    },
+    "position": {
+      "type": "string",
+      "description": "Current position/title"
+    },
+    "party": {
+      "type": "string",
+      "enum": [
+        "Democrat",
+        "Republican",
+        "Independent",
+        "Green",
+        "Libertarian",
+        "Other"
+      ],
+      "description": "Political party"
+    },
+    "state": {
+      "type": "string",
+      "description": "State they represent"
+    },
+    "district": {
+      "type": "string",
+      "description": "District (if applicable)"
+    },
+    "office_type": {
+      "type": "string",
+      "enum": [
+        "House",
+        "Senate",
+        "Governor",
+        "President",
+        "Cabinet",
+        "Supreme Court",
+        "State",
+        "Local"
+      ],
+      "description": "Type of office"
+    },
+    "dc_phone": {
+      "type": "string",
+      "description": "Washington D.C. office phone number"
+    },
+    "district_phone": {
+      "type": "string",
+      "description": "District office phone number"
+    },
+    "dc_office": {
+      "type": "string",
+      "description": "DC office location (room number and building)"
+    },
+    "district_offices": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of district office locations"
+    },
+    "email": {
+      "type": "string",
+      "description": "Contact email"
+    },
+    "website": {
+      "type": "string",
+      "description": "Official website"
+    },
+    "social_media": {
+      "type": "object",
+      "properties": {
+        "twitter": {
+          "type": "string"
+        },
+        "facebook": {
+          "type": "string"
+        },
+        "instagram": {
+          "type": "string"
+        }
+      }
+    },
+    "committees": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Committee memberships"
+    },
+    "term_start": {
+      "type": "string",
+      "format": "date",
+      "description": "Start of current term"
+    },
+    "term_end": {
+      "type": "string",
+      "format": "date",
+      "description": "End of current term"
+    },
+    "biography": {
+      "type": "string",
+      "description": "Brief biography"
+    },
+    "key_issues": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Key policy issues"
+    },
+    "voting_record": {
+      "type": "object",
+      "description": "Voting statistics and record"
+    },
+    "approval_rating": {
+      "type": "number",
+      "description": "Current approval rating percentage"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Profile image URL"
+    }
+  },
+  "required": [
+    "name",
+    "position",
+    "party",
+    "state",
+    "office_type"
+  ]
+} 
