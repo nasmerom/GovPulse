@@ -9,6 +9,8 @@ import { Users, Search, Filter, TrendingUp, TrendingDown, MapPin, Calendar, Arro
 import { Skeleton } from "../components/ui/skeleton";
 import AppLayout from "../components/AppLayout";
 import { formatFullName } from '../utils/formatName';
+import { getRepresentatives } from '../utils/googleCivic';
+import { Button } from "../components/ui/button";
 
 export default function Politicians() {
   const [user, setUser] = useState(null);
@@ -20,6 +22,10 @@ export default function Politicians() {
   const [partyFilter, setPartyFilter] = useState("all");
   const [officeFilter, setOfficeFilter] = useState("all");
   const [stateFilter, setStateFilter] = useState("all");
+  const [civicReps, setCivicReps] = useState(null);
+  const [civicLoading, setCivicLoading] = useState(false);
+  const [civicError, setCivicError] = useState(null);
+  const [civicQuery, setCivicQuery] = useState('');
   const router = useRouter();
 
   useEffect(() => {
@@ -174,6 +180,20 @@ export default function Politicians() {
     ];
   };
 
+  const fetchCivicReps = async () => {
+    setCivicLoading(true);
+    setCivicError(null);
+    try {
+      const data = await getRepresentatives(civicQuery || user?.address || user?.zipCode || '');
+      setCivicReps(data);
+    } catch (err) {
+      setCivicError('Could not fetch from Google Civic API.');
+      setCivicReps(null);
+    } finally {
+      setCivicLoading(false);
+    }
+  };
+
   if (!user) {
     return (
       <AppLayout user={user}>
@@ -190,6 +210,38 @@ export default function Politicians() {
     <AppLayout user={user}>
       <div className="p-4 md:p-6 space-y-6 min-h-screen" style={{ background: 'var(--terminal-bg)' }}>
         <div className="max-w-7xl mx-auto">
+          {/* Google Civic API Integration */}
+          <div className="mb-6 p-4 bg-gray-900 border border-blue-700 rounded-lg">
+            <h2 className="text-lg font-bold text-blue-300 mb-2">Try Google Civic API Lookup</h2>
+            <div className="flex flex-col md:flex-row gap-2 mb-2">
+              <Input
+                type="text"
+                placeholder="Enter address or ZIP code"
+                value={civicQuery}
+                onChange={e => setCivicQuery(e.target.value)}
+                className="w-full md:w-96"
+              />
+              <Button onClick={fetchCivicReps} className="bg-blue-600 hover:bg-blue-700">Lookup</Button>
+            </div>
+            {civicLoading && <div className="text-blue-400">Loading representatives...</div>}
+            {civicError && <div className="text-red-400">{civicError}</div>}
+            {civicReps && civicReps.officials && (
+              <div className="mt-2">
+                <div className="font-semibold text-blue-200 mb-1">Officials:</div>
+                <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {civicReps.officials.map((o, i) => (
+                    <li key={i} className="p-2 bg-gray-800 rounded border border-gray-700">
+                      <div className="font-bold text-blue-300">{o.name}</div>
+                      <div className="text-sm text-gray-300">{o.party}</div>
+                      {o.phones && <div className="text-xs text-gray-400">Phone: {o.phones[0]}</div>}
+                      {o.emails && <div className="text-xs text-gray-400">Email: {o.emails[0]}</div>}
+                      {o.urls && <a href={o.urls[0]} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 underline">Website</a>}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
           {/* Header */}
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 md:mb-8 gap-4">
             <div>
